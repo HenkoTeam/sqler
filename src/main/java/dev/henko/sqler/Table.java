@@ -1,6 +1,9 @@
 package dev.henko.sqler;
 
-import java.util.Arrays;
+import dev.henko.sqler.element.Element;
+import org.jdbi.v3.core.Handle;
+import org.jdbi.v3.core.Jdbi;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,14 +18,22 @@ public class Table {
   private String parameters;
   private String declaration;
 
-  Table(String tableName,
-               List<Element> elements) {
+  Table(
+      String tableName,
+      List<Element> elements
+  ) {
     this.tableName = tableName;
     this.elements = elements;
   }
 
   public static TableBuilder builder(String tableName) {
     return new TableBuilder(tableName);
+  }
+
+  public void createIfNotExists(Jdbi connection) {
+    try (Handle handle = connection.open()) {
+      handle.execute("CREATE TABLE IF NOT EXISTS " + getName() + "(" + getDeclaration() + ")");
+    }
   }
 
   public String getName() {

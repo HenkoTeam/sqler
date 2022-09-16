@@ -8,13 +8,17 @@ import org.jetbrains.annotations.Nullable;
 public interface Connection {
 
   static @NotNull Connection create(
-      @NotNull ConnectionProperties properties,
+      @NotNull ConnectionCredentials properties,
       @NotNull DriverSource source
   ) {
     return switch (source) {
       case MySQL -> new MySQLConnection(properties);
       case SQLite -> new SQLiteConnection(properties);
     };
+  }
+
+  static @NotNull ConnectionBuilder builder(DriverSource source) {
+    return new ConnectionBuilder(source);
   }
 
   void connect(Object... params);

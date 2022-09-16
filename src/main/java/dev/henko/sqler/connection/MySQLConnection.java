@@ -9,10 +9,10 @@ import org.jetbrains.annotations.Nullable;
 public class MySQLConnection
     implements Connection {
 
-  private final ConnectionProperties properties;
+  private final ConnectionCredentials properties;
   private Jdbi jdbi;
 
-  public MySQLConnection(ConnectionProperties properties) {
+  public MySQLConnection(ConnectionCredentials properties) {
     this.properties = properties;
   }
 
@@ -31,9 +31,7 @@ public class MySQLConnection
     config.setUsername(properties.getUsername());
     config.setPassword(properties.getPassword());
 
-    config.setMaximumPoolSize(properties.getMaximumConnections());
-    config.setConnectionTimeout(properties.getConnectionTimeout());
-
+    config.setMaximumPoolSize(6);
     jdbi = Jdbi.create(new HikariDataSource(config));
   }
 

@@ -9,10 +9,10 @@ import org.jetbrains.annotations.Nullable;
 public class SQLiteConnection
     implements Connection {
 
-  private final ConnectionProperties properties;
+  private final ConnectionCredentials properties;
   private Jdbi jdbi;
 
-  public SQLiteConnection(ConnectionProperties properties) {
+  public SQLiteConnection(ConnectionCredentials properties) {
     this.properties = properties;
   }
 
@@ -28,8 +28,7 @@ public class SQLiteConnection
 
     config.setDriverClassName(DriverSource.SQLite.getClazz());
 
-    config.setMaximumPoolSize(properties.getMaximumConnections());
-    config.setConnectionTimeout(properties.getConnectionTimeout());
+    config.setMaximumPoolSize(6);
 
     jdbi = Jdbi.create(new HikariDataSource(config));
   }

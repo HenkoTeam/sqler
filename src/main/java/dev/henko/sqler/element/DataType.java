@@ -1,4 +1,4 @@
-package dev.henko.sqler;
+package dev.henko.sqler.element;
 
 public enum DataType {
 

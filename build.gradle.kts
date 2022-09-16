@@ -1,6 +1,8 @@
 plugins {
     java
+    `java-library`
     `maven-publish`
+    id("com.github.johnrengelman.shadow") version("7.1.2")
 }
 
 repositories {
@@ -9,9 +11,9 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains:annotations:23.0.0")
-    implementation("com.zaxxer:HikariCP:5.0.1")
-    implementation("org.jdbi:jdbi3-core:3.32.0")
+    compileOnly("org.jetbrains:annotations:23.0.0")
+    api("com.zaxxer:HikariCP:4.0.3")
+    api("org.jdbi:jdbi3-core:3.1.0")
 }
 
 

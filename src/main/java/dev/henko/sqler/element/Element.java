@@ -1,4 +1,4 @@
-package dev.henko.sqler;
+package dev.henko.sqler.element;
 
 import java.util.Arrays;
 import java.util.List;
