@@ -5,6 +5,7 @@ import dev.henko.sqler.TableBuilder;
 import dev.henko.sqler.annotated.annotation.Constraints;
 import dev.henko.sqler.annotated.annotation.ForeignKey;
 import dev.henko.sqler.annotated.annotation.Ignored;
+import dev.henko.sqler.annotated.error.DataTypeNotFoundException;
 import dev.henko.sqler.annotated.error.TableAnnotationNotFoundException;
 import dev.henko.sqler.element.DataType;
 import dev.henko.sqler.element.Element;
@@ -72,7 +73,7 @@ final class AnnotatedTableFactory {
       case "Date" -> DataType.TIMESTAMP;
       case "UUID" -> DataType.UUID;
       case "ArrayList", "LinkedList" -> DataType.LIST;
-      default -> null;
+      default -> throw new DataTypeNotFoundException();
     };
 
   }
