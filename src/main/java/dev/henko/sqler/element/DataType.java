@@ -5,10 +5,10 @@ public enum DataType {
   TIMESTAMP("TIMESTAMP"),
   BOOLEAN("TINYINT(1)"),
   TEXT("TEXT"),
+  LIST("TEXT"),
   STRING("VARCHAR(255)"),
   NUMBER("INT"),
   DECIMAL("FLOAT"),
-  EPOCH("INT(21)"),
   UUID("VARCHAR(36)");
 
   final String sql;

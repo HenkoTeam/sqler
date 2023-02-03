@@ -10,7 +10,7 @@ public class Element {
 
   private final List<Constraint> constraints;
 
-  private ForeignKey key;
+  private final ForeignKey key;
   private String declaration;
 
   public static Element create(String column, DataType type, Constraint... constraints) {
@@ -19,6 +19,10 @@ public class Element {
 
   public static Element create(String column, DataType type, ForeignKey key, Constraint... constraints) {
     return new Element(column, type, key, constraints);
+  }
+
+  public static ElementBuilder builder(DataType dataType) {
+    return new ElementBuilder(dataType);
   }
 
   private Element(String column, DataType type, ForeignKey key, Constraint... constraints) {
@@ -78,6 +82,10 @@ public class Element {
 
   public String getColumn() {
     return column;
+  }
+
+  public DataType getType() {
+    return type;
   }
 
   public static class ForeignKey {

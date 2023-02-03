@@ -1,80 +1,58 @@
 package dev.henko.sqler;
 
 import dev.henko.sqler.connection.Connection;
-import org.jdbi.v3.core.Handle;
-import org.jdbi.v3.core.Jdbi;
+import org.jdbi.v3.core.result.ResultIterable;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
-public class Storage<T> {
+public interface Storage<T> {
 
-  private static final Executor DEFAULT_ASYNC_EXECUTOR = Executors.newFixedThreadPool(3);
-
-  protected final Jdbi connection;
-
-  protected final TableMapper<T> mapper;
-  protected final Table table;
-
-  protected final Executor executor;
-
-  public Storage(
-      Connection connection,
-      TableMapper<T> mapper,
-      Executor executor
+  default @NotNull CompletableFuture<T> find(
+      @NotNull String where,
+      @NotNull String value
   ) {
-    this.connection = connection.get();
-    this.mapper = mapper;
-    this.table = mapper.getTable();
-    this.executor = executor;
+    return find(where, value, o -> {});
   }
 
-  public Storage(
-      Connection connection,
-      TableMapper<T> mapper
+  @NotNull CompletableFuture<T> find(
+      @NotNull String where,
+      @NotNull String value,
+      @NotNull Consumer<T> thenAccept
+  );
+
+  default @NotNull CompletableFuture<Collection<T>> findAll() {
+    return findAll(o -> {});
+  }
+
+  @NotNull CompletableFuture<Collection<T>> findAll(
+      @NotNull Consumer<T> thenAccept
+  );
+
+  @NotNull CompletableFuture<ResultIterable<T> >select(
+      @NotNull String query
+  );
+
+  void update(@NotNull T object);
+
+  void delete(@NotNull String where, @NotNull String value);
+
+  static <U> @NotNull Storage<U> create(
+      @NotNull Class<U> type,
+      @NotNull Connection connection,
+      @NotNull Executor executor
   ) {
-    this(connection, mapper, DEFAULT_ASYNC_EXECUTOR);
+    return new SqlerStorage<>(connection, TableMapper.create(type), executor);
   }
 
-  public CompletableFuture<T> find(String key, String value) {
-    return CompletableFuture.supplyAsync(() -> {
-      try (Handle handle = connection.open()) {
-        return handle
-            .select(String.format("SELECT * FROM <TABLE> WHERE %s = :%s", key))
-            .define("TABLE", table.getName())
-            .bind(key, value)
-            .map(mapper)
-            .findFirst()
-            .orElse(null);
-      }
-    }, executor);
-  }
-
-  public void save(T object) {
-    executor.execute(() -> {
-      try (Handle handle = connection.open()) {
-        handle
-            .createUpdate("REPLACE INTO <TABLE> (<COLUMNS>) VALUES (<VALUES>)")
-            .define("TABLE", table.getName())
-            .define("COLUMNS", table.getColumns())
-            .define("VALUES", table.getParameters())
-            .bindMap(mapper.map(object))
-            .execute();
-      }
-    });
-  }
-
-  public void delete(String key, String value) {
-    executor.execute(() -> {
-      try (Handle handle = connection.open()) {
-        handle
-            .createUpdate(String.format("DELETE FROM <TABLE> WHERE %s = :%s", key))
-            .define("TABLE", table.getName())
-            .bind(key, value)
-            .execute();
-      }
-    });
+  static <U> @NotNull Storage<U> create(
+      @NotNull Class<U> type,
+      @NotNull Connection connection
+  ) {
+    return new SqlerStorage<>(connection, TableMapper.create(type));
   }
 
 }

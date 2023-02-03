@@ -100,4 +100,7 @@ public class Table {
     return declaration;
   }
 
+  public List<Element> getElements() {
+    return elements;
+  }
 }
