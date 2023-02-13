@@ -19,7 +19,6 @@ public final class AnnotatedTableMapper<T> implements TableMapper<T> {
     this.table = AnnotatedTableFactory.create(type);
   }
 
-
   @Override
   public Map<String, Object> map(T object) {
     return ReflectionMapper.map(table, object);

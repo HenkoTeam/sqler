@@ -13,8 +13,8 @@ repositories {
 dependencies {
     compileOnly("org.jetbrains:annotations:23.0.0")
     compileOnly("com.google.code.gson:gson:2.9.0")
-    api("com.zaxxer:HikariCP:4.0.3")
-    api("org.jdbi:jdbi3-core:3.1.0")
+    api("com.zaxxer:HikariCP:5.0.1")
+    api("org.jdbi:jdbi3-core:3.37.1")
 }
 
 
