@@ -1,13 +1,15 @@
 package dev.henko.sqler.annotated;
 
+import com.google.gson.reflect.TypeToken;
 import dev.henko.sqler.Table;
 import dev.henko.sqler.TableBuilder;
 import dev.henko.sqler.annotated.annotation.Constraints;
 import dev.henko.sqler.annotated.annotation.ForeignKey;
 import dev.henko.sqler.annotated.annotation.Ignored;
-import dev.henko.sqler.annotated.error.DataTypeNotFoundException;
+import dev.henko.sqler.annotated.error.ElementTypeSerializerNotFound;
 import dev.henko.sqler.annotated.error.TableAnnotationNotFoundException;
-import dev.henko.sqler.element.DataType;
+import dev.henko.sqler.annotated.serializer.TypeSerializer;
+import dev.henko.sqler.annotated.serializer.TypeSerializerMap;
 import dev.henko.sqler.element.Element;
 import dev.henko.sqler.element.ElementBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -41,7 +43,9 @@ final class AnnotatedTableFactory {
 
   private static @NotNull Element createElement(Field field) {
 
-    ElementBuilder builder = Element.builder(getElementType(field.getType()))
+    TypeSerializer<?> serializer = TypeSerializerMap.get(TypeToken.get(field.getGenericType()));
+
+    ElementBuilder builder = Element.builder(serializer.dataType())
         .colum(field.getName());
 
     Constraints constraints = field.getDeclaredAnnotation(Constraints.class);
@@ -62,19 +66,5 @@ final class AnnotatedTableFactory {
     }
 
     return builder.build();
-  }
-
-  private static DataType getElementType(Class<?> elementType) {
-    return switch (elementType.getSimpleName()) {
-      case "String" -> DataType.STRING;
-      case "Integer", "int" -> DataType.NUMBER;
-      case "Double", "double", "Float", "float" -> DataType.DECIMAL;
-      case "Boolean, boolean" -> DataType.BOOLEAN;
-      case "Date" -> DataType.TIMESTAMP;
-      case "UUID" -> DataType.UUID;
-      case "ArrayList", "LinkedList" -> DataType.LIST;
-      default -> throw new DataTypeNotFoundException();
-    };
-
   }
 }
