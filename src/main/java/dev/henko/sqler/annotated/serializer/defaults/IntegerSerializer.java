@@ -21,6 +21,6 @@ public class IntegerSerializer
 
   @Override
   public TypeToken<Integer> type() {
-    return TypeToken.get(Integer.class);
+    return TypeToken.get(int.class);
   }
 }

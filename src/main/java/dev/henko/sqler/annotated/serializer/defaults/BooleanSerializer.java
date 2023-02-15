@@ -21,6 +21,6 @@ public class BooleanSerializer
 
   @Override
   public TypeToken<Boolean> type() {
-    return TypeToken.get(Boolean.class);
+    return TypeToken.get(boolean.class);
   }
 }

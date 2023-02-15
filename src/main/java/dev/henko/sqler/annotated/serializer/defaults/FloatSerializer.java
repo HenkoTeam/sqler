@@ -21,6 +21,6 @@ public class FloatSerializer
 
   @Override
   public TypeToken<Float> type() {
-    return TypeToken.get(Float.class);
+    return TypeToken.get(float.class);
   }
 }

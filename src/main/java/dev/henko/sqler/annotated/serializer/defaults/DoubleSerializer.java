@@ -21,6 +21,6 @@ public class DoubleSerializer
 
   @Override
   public TypeToken<Double> type() {
-    return TypeToken.get(Double.class);
+    return TypeToken.get(double.class);
   }
 }
