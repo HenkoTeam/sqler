@@ -25,7 +25,7 @@ public class ConnectionCredentials {
   public static ConnectionCredentials of(Map<String, Object> map) {
     return new ConnectionCredentials(
         (String) map.getOrDefault("hostname", "localhost"),
-        (String) map.getOrDefault("port", 3306),
+        (String) map.getOrDefault("port", "3306"),
         (String) map.getOrDefault("database", "database"),
         (String) map.getOrDefault("username", "root"),
         (String) map.getOrDefault("password", "admin")

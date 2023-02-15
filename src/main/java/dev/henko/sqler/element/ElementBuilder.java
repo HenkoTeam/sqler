@@ -5,7 +5,7 @@ public class ElementBuilder {
   private final DataType dataType;
   private String colum;
   private Element.ForeignKey foreignKey;
-  private Constraint[] constraints;
+  private Constraint[] constraints = {};
 
   public ElementBuilder(DataType dataType) {
     this.dataType = dataType;
