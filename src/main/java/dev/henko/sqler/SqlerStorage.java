@@ -31,6 +31,7 @@ public class SqlerStorage<T> implements Storage<T> {
     this.mapper = mapper;
     this.table = mapper.getTable();
     this.executor = executor;
+    table.createIfNotExists(this.connection);
   }
 
   public SqlerStorage(
