@@ -1,6 +1,9 @@
 package dev.henko.sqler.reflect;
 
 import com.google.gson.reflect.TypeToken;
+import dev.henko.sqler.annotated.annotation.ConstructorParams;
+import dev.henko.sqler.annotated.error.ConstructorAnnotationLengthException;
+import dev.henko.sqler.annotated.error.ConstructorAnnotationNotFoundException;
 import dev.henko.sqler.annotated.serializer.TypeSerializer;
 import dev.henko.sqler.annotated.serializer.TypeSerializerMap;
 import org.jetbrains.annotations.NotNull;
@@ -21,9 +24,26 @@ final class ReflectionUtil {
       @NotNull ResultSet resultSet
   ) throws SQLException {
     try {
-      Constructor<?> constructor = type.getDeclaredConstructors()[0];
+      Constructor<?> constructor = null;
+      for (Constructor<?> c : type.getDeclaredConstructors()) {
+        if (c.getDeclaredAnnotation(ConstructorParams.class) != null) {
+            constructor = c;
+            break;
+        }
+      }
+
+      if (constructor == null) {
+        throw new ConstructorAnnotationNotFoundException();
+      }
+
       Parameter[] parameters = constructor.getParameters();
       Object[] parametersInstances = new Object[parameters.length];
+
+      ConstructorParams ann = constructor.getDeclaredAnnotation(ConstructorParams.class);
+
+      if (ann.value().length != parameters.length) {
+        throw new ConstructorAnnotationLengthException();
+      }
 
       for (int i = 0; i < parameters.length; i++) {
 
@@ -31,7 +51,7 @@ final class ReflectionUtil {
         TypeSerializer<?> serializer = TypeSerializerMap
             .get(TypeToken.get(parameter.getParameterizedType()));
 
-        parametersInstances[i] = serializer.deserialize(resultSet, parameter.getName());
+        parametersInstances[i] = serializer.deserialize(resultSet, ann.value()[i]);
       }
 
       return (T) constructor.newInstance(parametersInstances);
