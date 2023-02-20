@@ -36,6 +36,8 @@ public interface Storage<T> {
       @NotNull String query
   );
 
+  void update(@NotNull String query);
+
   void update(@NotNull T object);
 
   void delete(@NotNull String where, @NotNull String value);

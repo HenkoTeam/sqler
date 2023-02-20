@@ -102,6 +102,18 @@ public class SqlerStorage<T> implements Storage<T> {
   }
 
   @Override
+  public void update(@NotNull String query) {
+    executor.execute(() -> {
+      try (Handle handle = connection.open()) {
+        handle
+            .createUpdate(query)
+            .define("TABLE", table.getName())
+            .execute();
+      }
+    });
+  }
+
+  @Override
   public void update(@NotNull T object) {
     executor.execute(() -> {
       try (Handle handle = connection.open()) {
