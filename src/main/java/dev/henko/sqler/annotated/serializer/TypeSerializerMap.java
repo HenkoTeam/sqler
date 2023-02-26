@@ -20,6 +20,7 @@ public class TypeSerializerMap {
     register(new DoubleSerializer());
     register(new FloatSerializer());
     register(new IntegerSerializer());
+    register(new LongSerializer());
     register(new StringSerializer());
     register(new UUIDSerializer());
     register(new ListSerializer<>(new TypeToken<List<UUID>>() {}));

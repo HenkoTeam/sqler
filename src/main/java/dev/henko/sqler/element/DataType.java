@@ -8,6 +8,7 @@ public enum DataType {
   LIST("TEXT"),
   STRING("VARCHAR(255)"),
   NUMBER("INT"),
+  LONG("BIGINT"),
   DECIMAL("FLOAT"),
   UUID("VARCHAR(36)");
 
